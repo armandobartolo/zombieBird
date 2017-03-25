@@ -7,6 +7,9 @@ import org.armandobartolo.ZBGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "Zombie Bird";
+		config.width = 480;
+		config.height = 320;
 		new LwjglApplication(new ZBGame(), config);
 	}
 }
