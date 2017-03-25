@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import org.armandobartolo.gameworld.GameRenderer;
 import org.armandobartolo.gameworld.GameWorld;
+import org.armandobartolo.zbhelpers.InputHandler;
 
 /**
  * Created by armando on 25-03-2017.
@@ -13,29 +14,32 @@ public class GameScreen implements Screen {
 
     private GameWorld world;
     private GameRenderer renderer;
+    private float runTime = 0;
 
     public GameScreen() {
-        Gdx.app.log("GameScreen", "Attached");
-        world = new GameWorld();
-        renderer = new GameRenderer();
+
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        float gameWidth = 136;
+        float gameHeight = screenHeight / (screenWidth / gameWidth);
+
+        int midPointY = (int) (gameHeight / 2);
+
+        world = new GameWorld(midPointY);
+        renderer = new GameRenderer(world, (int) gameHeight, midPointY);
+
+        Gdx.input.setInputProcessor(new InputHandler(world.getBird()));
     }
 
     @Override
     public void render(float delta) {
-        // Sets a Color to Fill the Screen with (RGB = 10, 15, 230), Opacity of 1 (100%)
-           //Gdx.gl.glClearColor(10/255.0f, 15/255.0f, 230/255.0f, 1f);
-        // Fills the screen with the selected color
-           //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        // Covert Frame rate to String, print it
-           //Gdx.app.log("GameScreen FPS", (1/delta) + "");
-
+        runTime += delta;
         world.update(delta);
-        renderer.render();
+        renderer.render(runTime);
     }
 
     @Override
     public void resize(int width, int height) {
-        Gdx.app.log("GameScreen", "resizing");
     }
 
     @Override
