@@ -19,7 +19,15 @@ public class Pipe extends Scrollable {
     public static final int SKULL_HEIGHT = 11;
 
     private float groundY;
+    private boolean scored;
 
+    public boolean isScored() {
+        return scored;
+    }
+
+    public void setScored(boolean scored) {
+        this.scored = scored;
+    }
 
     public Pipe(float x, float y, int width, int height, float scrollSpeed, float groundY) {
         super(x, y, width, height, scrollSpeed);
@@ -37,6 +45,7 @@ public class Pipe extends Scrollable {
 
         super.reset(newX);
         height = r.nextInt(90) + 15;
+        scored = false;
     }
 
     @Override
@@ -80,5 +89,11 @@ public class Pipe extends Scrollable {
         }
 
         return false;
+    }
+
+    public void onRestart(float x, float scrollSpeed) {
+
+        velocity.x = scrollSpeed;
+        reset(x);
     }
 }

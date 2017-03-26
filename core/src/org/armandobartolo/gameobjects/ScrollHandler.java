@@ -1,5 +1,8 @@
 package org.armandobartolo.gameobjects;
 
+import org.armandobartolo.gameworld.GameWorld;
+import org.armandobartolo.zbhelpers.AssetLoader;
+
 /**
  * Created by armando on 25-03-2017.
  */
@@ -7,17 +10,20 @@ public class ScrollHandler {
 
     private Grass frontGrass, backGrass;
     private Pipe pipe1, pipe2, pipe3;
+    private GameWorld gameWorld;
 
     public static final int SCROLL_SPEED = -59;
     public static final int PIPE_GAP = 49;
 
-    public ScrollHandler(float yPos) {
+    public ScrollHandler(float yPos, GameWorld gameWorld) {
         frontGrass = new Grass(0, yPos, 143, 11, SCROLL_SPEED);
         backGrass = new Grass(frontGrass.getTailX(), yPos, 143, 11, SCROLL_SPEED);
 
         pipe1 = new Pipe(210, 0, 22, 60, SCROLL_SPEED, yPos);
         pipe2 = new Pipe(pipe1.getTailX() + PIPE_GAP, 0, 22, 60, SCROLL_SPEED, yPos);
         pipe3 = new Pipe(pipe2.getTailX() + PIPE_GAP, 0, 22, 60, SCROLL_SPEED, yPos);
+
+        this.gameWorld = gameWorld;
 
     }
 
@@ -66,7 +72,33 @@ public class ScrollHandler {
     }
 
     public boolean collides(Bird bird) {
+
+        if (!pipe1.isScored() && pipe1.getX() + (pipe1.getWidth() / 2) < bird.getX() + bird.getWidth()) {
+            addScore(1);
+            pipe1.setScored(true);
+            AssetLoader.coin.play();
+
+        } else if (!pipe2.isScored() && pipe2.getX() + (pipe2.getWidth() / 2) < bird.getX() + bird.getWidth()) {
+            addScore(1);
+            pipe2.setScored(true);
+            AssetLoader.coin.play();
+
+        } else if (!pipe3.isScored() && pipe3.getX() + (pipe3.getWidth() / 2) < bird.getX() + bird.getWidth()) {
+            addScore(1);
+            pipe3.setScored(true);
+            AssetLoader.coin.play();
+        }
+
+
+
+
+
         return pipe1.collides(bird) || pipe2.collides(bird) || pipe3.collides(bird);
+    }
+
+    public void addScore(int increment) {
+
+        gameWorld.addScore(increment);
     }
 
     public void stop() {
@@ -75,5 +107,17 @@ public class ScrollHandler {
         pipe1.stop();
         pipe2.stop();
         pipe3.stop();
+    }
+
+    public void onRestart() {
+        frontGrass.onRestart(0, SCROLL_SPEED);
+
+        backGrass.onRestart(frontGrass.getTailX(), SCROLL_SPEED);
+
+        pipe1.onRestart(210, SCROLL_SPEED);
+
+        pipe2.onRestart(pipe1.getTailX() + PIPE_GAP, SCROLL_SPEED);
+
+        pipe3.onRestart(pipe2.getTailX() + PIPE_GAP, SCROLL_SPEED);
     }
 }
