@@ -1,10 +1,13 @@
 package org.armandobartolo.zbhelpers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -19,6 +22,12 @@ public class AssetLoader {
     public static TextureRegion bird, birdDown, birdUp;
 
     public static TextureRegion skullUp, skullDown, bar;
+
+    public static Sound dead;
+    public static Sound coin;
+    public static Sound flap;
+
+    public static BitmapFont font, shadow;
 
     public static void load() {
 
@@ -52,10 +61,27 @@ public class AssetLoader {
         bar = new TextureRegion(texture, 136, 16, 22, 3);
         bar.flip(false, true);
 
+        dead = Gdx.audio.newSound(Gdx.files.internal("data/dead.wav"));
+        coin = Gdx.audio.newSound(Gdx.files.internal("data/coin.wav"));
+        flap = Gdx.audio.newSound(Gdx.files.internal("data/flap.wav"));
+
+        font = new BitmapFont(Gdx.files.internal("data/text.fnt"));
+        font.getData().setScale(.25f, .25f);
+
+        shadow = new BitmapFont(Gdx.files.internal("data/shadow.fnt"));
+        shadow.getData().setScale(.25f, .25f);
+
     }
 
     public static void dispose() {
         // We must dispose of the texture when we are finished.
         texture.dispose();
+
+        dead.dispose();
+        coin.dispose();
+        flap.dispose();
+
+        font.dispose();
+        shadow.dispose();
     }
 }

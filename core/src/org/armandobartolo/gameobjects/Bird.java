@@ -2,6 +2,7 @@ package org.armandobartolo.gameobjects;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import org.armandobartolo.zbhelpers.AssetLoader;
 
 /**
  * Created by armando on 25-03-2017.
@@ -17,6 +18,7 @@ public class Bird {
     private int height;
 
     private Circle boundingCircle;
+    private boolean alive;
 
 
     public Bird(float x, float y, int width, int height) {
@@ -27,6 +29,7 @@ public class Bird {
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 460);
         boundingCircle = new Circle();
+        alive = true;
     }
 
     public void update(float delta) {
@@ -49,7 +52,7 @@ public class Bird {
             }
         }
 
-        if (isFalling()) {
+        if (isFalling() || !alive) {
             rotation += 480 * delta;
             if (rotation > 90) {
                 rotation = 90;
@@ -60,7 +63,10 @@ public class Bird {
     }
 
     public void onClick() { //when a click happens, speed is set to 140 upwards
-        velocity.y = -140;
+       if (alive) {
+           AssetLoader.flap.play();
+           velocity.y = -140;
+       }
     }
 
     public float getX() {
@@ -88,10 +94,23 @@ public class Bird {
     }
 
     public boolean shouldntFlap() {
-        return velocity.y > 70;
+        return velocity.y > 70 || !alive;
     }
 
     public Circle getBoundingCircle() {
         return boundingCircle;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void die() {
+        alive = false;
+        velocity.y = 0;
+    }
+
+    public void decelerate() {
+        acceleration.y = 0;
     }
 }
